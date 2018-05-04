@@ -51,7 +51,7 @@ namespace Biaoqingbao
             //FlowLayoutHints.AutoScroll = true;
 
             ni.Visible = true;
-            this.KeyPreview = true;
+            KeyPreview = true;
 
             _labelFont = new Font(DefaultFont.Name, DefaultFont.Size, FontStyle.Underline);
             //TempFolder
@@ -65,7 +65,7 @@ namespace Biaoqingbao
 
         private void BindEvents()
         {
-            this.BtnSearch.Click += async (sender, args) => await SearchAsync();
+            BtnSearch.Click += async (sender, args) => await SearchAsync();
             ni.Click += (s, e) =>
             {
                 var me = e as MouseEventArgs;
@@ -73,10 +73,10 @@ namespace Biaoqingbao
                 {
                     Show();
                     WindowState = FormWindowState.Normal;
-                    this.Activate();
+                    Activate();
                 }
             };
-            this.SizeChanged += (s, e) =>
+            SizeChanged += (s, e) =>
             {
                 if (WindowState == FormWindowState.Minimized)
                 {
@@ -84,20 +84,20 @@ namespace Biaoqingbao
                     Hide();
                 }
             };
-            this.Load += (s, e) =>
+            Load += (s, e) =>
             {
                 var size = Screen.PrimaryScreen.WorkingArea.Size;
-                this.Location = new Point(size.Width - this.Width, size.Height - this.Height);
+                Location = new Point(size.Width - Width, size.Height - Height);
                 TbKeyword.Focus();
             };
-            this.KeyDown += async (s, e) =>
+            KeyDown += async (s, e) =>
             {
-                if (e.KeyCode == Keys.Enter && TbKeyword.ContainsFocus)
+                if (e.KeyCode == Keys.Enter && TbKeyword.Focused)
                 {
                     await SearchAsync();
                 }
             };
-            this.FormClosed += (s, e) =>
+            FormClosed += (s, e) =>
             {
                 if (Directory.Exists(_tempFolder))
                 {
@@ -114,7 +114,7 @@ namespace Biaoqingbao
                     p.StandardInput.WriteLine(string.Format("rmdir /s/q {0} &exit", _tempFolder));
                 }
             };
-            this.TbResultCount.KeyUp += (s, e) =>
+            TbResultCount.KeyUp += (s, e) =>
             {
                 var c = 0;
                 if (int.TryParse(TbResultCount.Text, out c))
@@ -295,7 +295,7 @@ namespace Biaoqingbao
                     {
                         await LableClick(s, e);
                     };
-                    this.Invoke(new Action(() =>
+                    Invoke(new Action(() =>
                     {
                         FlowLayoutHints.Controls.Add(l);
                     }));
@@ -310,7 +310,7 @@ namespace Biaoqingbao
                         {
                             using (var fs = result.Content.ReadAsStreamAsync().Result)
                             {
-                                this.Invoke(new Action(() =>
+                                Invoke(new Action(() =>
                                 {
                                     var pb = new PictureBox();
                                     pb.Name = Guid.NewGuid().ToString();
@@ -382,6 +382,7 @@ namespace Biaoqingbao
         public IList<TempItem> items { get; set; }
         public IList<string> hintWords { get; set; }
     }
+
     class TempItem
     {
         public string picUrl { get; set; }
