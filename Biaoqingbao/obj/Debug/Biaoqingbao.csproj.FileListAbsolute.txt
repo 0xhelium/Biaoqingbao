@@ -1,0 +1,10 @@
+F:\work\git\Biaoqingbao\Biaoqingbao\bin\Debug\Biaoqingbao.exe.config
+F:\work\git\Biaoqingbao\Biaoqingbao\bin\Debug\Biaoqingbao.exe
+F:\work\git\Biaoqingbao\Biaoqingbao\bin\Debug\Biaoqingbao.pdb
+F:\work\git\Biaoqingbao\Biaoqingbao\obj\Debug\Biaoqingbao.csprojResolveAssemblyReference.cache
+F:\work\git\Biaoqingbao\Biaoqingbao\obj\Debug\Biaoqingbao.Form1.resources
+F:\work\git\Biaoqingbao\Biaoqingbao\obj\Debug\Biaoqingbao.Properties.Resources.resources
+F:\work\git\Biaoqingbao\Biaoqingbao\obj\Debug\Biaoqingbao.csproj.GenerateResource.Cache
+F:\work\git\Biaoqingbao\Biaoqingbao\obj\Debug\Biaoqingbao.exe
+F:\work\git\Biaoqingbao\Biaoqingbao\obj\Debug\Biaoqingbao.pdb
+F:\work\git\Biaoqingbao\Biaoqingbao\obj\Debug\Biaoqingbao.Resource.resources
