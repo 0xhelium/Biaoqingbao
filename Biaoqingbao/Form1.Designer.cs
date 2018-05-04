@@ -41,15 +41,18 @@
             this.CtxMenuPicbox = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CtxItemSave = new System.Windows.Forms.ToolStripMenuItem();
             this.CtxItemCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.CbOnlyEmotion = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.TbResultCount = new System.Windows.Forms.TextBox();
             this.CtxMenu.SuspendLayout();
             this.CtxMenuPicbox.SuspendLayout();
             this.SuspendLayout();
             // 
             // BtnSearch
             // 
-            this.BtnSearch.Location = new System.Drawing.Point(301, 7);
+            this.BtnSearch.Location = new System.Drawing.Point(195, 7);
             this.BtnSearch.Name = "BtnSearch";
-            this.BtnSearch.Size = new System.Drawing.Size(75, 23);
+            this.BtnSearch.Size = new System.Drawing.Size(53, 23);
             this.BtnSearch.TabIndex = 2;
             this.BtnSearch.Text = "搜 索";
             this.BtnSearch.UseVisualStyleBackColor = true;
@@ -58,7 +61,7 @@
             // 
             this.TbKeyword.Location = new System.Drawing.Point(7, 8);
             this.TbKeyword.Name = "TbKeyword";
-            this.TbKeyword.Size = new System.Drawing.Size(290, 21);
+            this.TbKeyword.Size = new System.Drawing.Size(182, 21);
             this.TbKeyword.TabIndex = 1;
             // 
             // FlowLayout
@@ -73,7 +76,7 @@
             // 
             this.ni.ContextMenuStrip = this.CtxMenu;
             this.ni.Icon = ((System.Drawing.Icon)(resources.GetObject("ni.Icon")));
-            this.ni.Text = "notifyIcon1";
+            this.ni.Text = "表情包搜索器";
             this.ni.Visible = true;
             // 
             // FlowLayoutHints
@@ -99,7 +102,7 @@
             // CbCopyGif
             // 
             this.CbCopyGif.AutoSize = true;
-            this.CbCopyGif.Location = new System.Drawing.Point(379, 15);
+            this.CbCopyGif.Location = new System.Drawing.Point(254, 18);
             this.CbCopyGif.Name = "CbCopyGif";
             this.CbCopyGif.Size = new System.Drawing.Size(90, 16);
             this.CbCopyGif.TabIndex = 5;
@@ -112,25 +115,57 @@
             this.CtxItemCopy,
             this.CtxItemSave});
             this.CtxMenuPicbox.Name = "CtxMenuPicbox";
-            this.CtxMenuPicbox.Size = new System.Drawing.Size(153, 70);
+            this.CtxMenuPicbox.Size = new System.Drawing.Size(113, 48);
             // 
             // CtxItemSave
             // 
             this.CtxItemSave.Name = "CtxItemSave";
-            this.CtxItemSave.Size = new System.Drawing.Size(152, 22);
+            this.CtxItemSave.Size = new System.Drawing.Size(112, 22);
             this.CtxItemSave.Text = "另存为";
             // 
             // CtxItemCopy
             // 
             this.CtxItemCopy.Name = "CtxItemCopy";
-            this.CtxItemCopy.Size = new System.Drawing.Size(152, 22);
+            this.CtxItemCopy.Size = new System.Drawing.Size(112, 22);
             this.CtxItemCopy.Text = "复制";
+            // 
+            // CbOnlyEmotion
+            // 
+            this.CbOnlyEmotion.AutoSize = true;
+            this.CbOnlyEmotion.Checked = true;
+            this.CbOnlyEmotion.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CbOnlyEmotion.Location = new System.Drawing.Point(254, 2);
+            this.CbOnlyEmotion.Name = "CbOnlyEmotion";
+            this.CbOnlyEmotion.Size = new System.Drawing.Size(84, 16);
+            this.CbOnlyEmotion.TabIndex = 7;
+            this.CbOnlyEmotion.Text = "仅搜索表情";
+            this.CbOnlyEmotion.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(347, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 12);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "结果数:";
+            // 
+            // TbResultCount
+            // 
+            this.TbResultCount.Location = new System.Drawing.Point(397, 7);
+            this.TbResultCount.Name = "TbResultCount";
+            this.TbResultCount.Size = new System.Drawing.Size(46, 21);
+            this.TbResultCount.TabIndex = 9;
+            this.TbResultCount.Text = "50";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(468, 288);
+            this.Controls.Add(this.TbResultCount);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.CbOnlyEmotion);
             this.Controls.Add(this.CbCopyGif);
             this.Controls.Add(this.FlowLayoutHints);
             this.Controls.Add(this.FlowLayout);
@@ -161,6 +196,9 @@
         private System.Windows.Forms.ContextMenuStrip CtxMenuPicbox;
         private System.Windows.Forms.ToolStripMenuItem CtxItemSave;
         private System.Windows.Forms.ToolStripMenuItem CtxItemCopy;
+        private System.Windows.Forms.CheckBox CbOnlyEmotion;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox TbResultCount;
     }
 }
 

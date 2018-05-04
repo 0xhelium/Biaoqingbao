@@ -23,12 +23,21 @@ namespace Biaoqingbao
 {
     public partial class Form1 : Form
     {
-        private string BASE_URL = "http://pic.sogou.com/pics/json.jsp?query={0}%20表情&st=5&start=0&xml_len=50&callback=dataCallback&reqFrom=wap_result&";
-        HttpClient Client;
-        Font LabelFont;
-        string TempFolder;
-        bool CopyGif { get { return CbCopyGif.Checked; } }
-        string LastClickPicbox = "";
+        private string _baseUrl
+        {
+            get
+            {
+                return string.Format(
+                    "http://pic.sogou.com/pics/json.jsp?query={0}&st=5&start=0&xml_len={1}&callback=dataCallback&reqFrom=wap_result"
+                    , CbOnlyEmotion.Checked ? "{0}%20表情" : "{0}"
+                    , TbResultCount.Text);
+            }
+        }
+        private HttpClient _client;
+        private Font _labelFont;
+        private string _tempFolder;
+        private bool _copyGif { get { return CbCopyGif.Checked; } }
+        private string _lastClickedPicbox = "";
 
         public Form1()
         {
@@ -36,21 +45,21 @@ namespace Biaoqingbao
             BindEvents();
 
             ShowInTaskbar = false;
-            Client = new HttpClient();
-            Client.Timeout = new TimeSpan(0, 0, 3);
+            _client = new HttpClient();
+            _client.Timeout = new TimeSpan(0, 0, 3);
             FlowLayout.AutoScroll = true;
-            FlowLayoutHints.AutoScroll = true;
+            //FlowLayoutHints.AutoScroll = true;
 
             ni.Visible = true;
             this.KeyPreview = true;
 
-            LabelFont = new Font(DefaultFont.Name, DefaultFont.Size, FontStyle.Underline);
+            _labelFont = new Font(DefaultFont.Name, DefaultFont.Size, FontStyle.Underline);
             //TempFolder
             var tempPath = Path.GetTempPath();
-            TempFolder = Path.Combine(tempPath, "biaoqingbao");
-            if (!Directory.Exists(TempFolder))
+            _tempFolder = Path.Combine(tempPath, "biaoqingbao");
+            if (!Directory.Exists(_tempFolder))
             {
-                Directory.CreateDirectory(TempFolder);
+                Directory.CreateDirectory(_tempFolder);
             }
         }
 
@@ -90,7 +99,7 @@ namespace Biaoqingbao
             };
             this.FormClosed += (s, e) =>
             {
-                if (Directory.Exists(TempFolder))
+                if (Directory.Exists(_tempFolder))
                 {
                     System.Diagnostics.Process p = new System.Diagnostics.Process();
                     p.StartInfo.FileName = "cmd.exe";
@@ -102,7 +111,23 @@ namespace Biaoqingbao
                     p.Start();
 
                     //向cmd窗口发送输入信息
-                    p.StandardInput.WriteLine(string.Format("rmdir /s/q {0} &exit", TempFolder));
+                    p.StandardInput.WriteLine(string.Format("rmdir /s/q {0} &exit", _tempFolder));
+                }
+            };
+            this.TbResultCount.KeyUp += (s, e) =>
+            {
+                var c = 0;
+                if (int.TryParse(TbResultCount.Text, out c))
+                {
+                    if (c > 100)
+                        c = 100;
+                    if (c < 1)
+                        c = 1;
+                    TbResultCount.Text = c.ToString();
+                }
+                else
+                {
+                    TbResultCount.Text = "";
                 }
             };
             CtxItemQuit.Click += (s, e) =>
@@ -111,10 +136,10 @@ namespace Biaoqingbao
             };
             CtxItemCopy.Click += (s, e) =>
             {
-                if (imgList.ContainsKey(LastClickPicbox))
+                if (imgList.ContainsKey(_lastClickedPicbox))
                 {
-                    var sender = FlowLayout.Controls.Find(LastClickPicbox, true).FirstOrDefault() as PictureBox;
-                    if (sender!=null)
+                    var sender = FlowLayout.Controls.Find(_lastClickedPicbox, true).FirstOrDefault() as PictureBox;
+                    if (sender != null)
                     {
                         PicBoxDbClick(sender, null);
                         return;
@@ -124,9 +149,9 @@ namespace Biaoqingbao
             };
             CtxItemSave.Click += (s, e) =>
             {
-                if (imgList.ContainsKey(LastClickPicbox))
+                if (imgList.ContainsKey(_lastClickedPicbox))
                 {
-                    var img = imgList[LastClickPicbox];
+                    var img = imgList[_lastClickedPicbox];
                     if (!File.Exists(img))
                     {
                         MessageBox.Show("there was something wrong...");
@@ -153,6 +178,13 @@ namespace Biaoqingbao
             var keyword = TbKeyword.Text.Trim();
             if (keyword.Length > 0)
             {
+                foreach (Control c in FlowLayout.Controls)
+                {
+                    if (c is PictureBox)//清除背景图 释放内存
+                    {
+                        ((PictureBox)c).BackgroundImage.Dispose();
+                    }
+                }
                 FlowLayout.Controls.Clear();//图片框
                 FlowLayoutHints.Controls.Clear();//相关词
                 imgList.Clear();
@@ -184,7 +216,7 @@ namespace Biaoqingbao
             var picbox = sender as PictureBox;
             var sc = new StringCollection();
             var filename = imgList[picbox.Name];
-            if (CopyGif && !filename.EndsWith(".gif"))
+            if (_copyGif && !filename.EndsWith(".gif"))
             {
                 int width = 128;
                 int height = width;
@@ -234,8 +266,8 @@ namespace Biaoqingbao
 
         private void Search(string keyword)
         {
-            var url = string.Format(BASE_URL, keyword);
-            var jsonp = Client.GetStringAsync(url).Result;
+            var url = string.Format(_baseUrl, keyword);
+            var jsonp = _client.GetStringAsync(url).Result;
             if (!string.IsNullOrEmpty(jsonp))
             {
                 var match = Regex.Match(jsonp, @"dataCallback\((.*)\);");
@@ -252,9 +284,9 @@ namespace Biaoqingbao
                 foreach (var word in data.hintWords)
                 {
                     Label l = new Label();
-                    l.Text = word;
+                    l.Text = word.Replace("表情包", "");
                     l.AutoSize = true;
-                    l.Font = LabelFont;
+                    l.Font = _labelFont;
                     l.ForeColor = System.Drawing.Color.Blue;
                     l.Margin = new Padding(1);
                     l.Cursor = Cursors.Hand;
@@ -273,7 +305,7 @@ namespace Biaoqingbao
                     try
                     {
                         var picUrl = data.items[i].picUrl;
-                        var result = Client.GetAsync(picUrl).Result;
+                        var result = _client.GetAsync(picUrl).Result;
                         if (result.IsSuccessStatusCode)
                         {
                             using (var fs = result.Content.ReadAsStreamAsync().Result)
@@ -286,7 +318,7 @@ namespace Biaoqingbao
                                     pb.BackgroundImageLayout = ImageLayout.Stretch;
                                     pb.ContextMenuStrip = CtxMenuPicbox;
                                     Bitmap img = Image.FromStream(fs) as Bitmap;
-                                    var fileName = Path.Combine(TempFolder, Guid.NewGuid().ToString() + GetImgExt(img.RawFormat));
+                                    var fileName = Path.Combine(_tempFolder, Guid.NewGuid().ToString() + GetImgExt(img.RawFormat));
                                     img.Save(fileName);
                                     imgList.Add(pb.Name, fileName);
                                     var tImg = img.GetThumbnailImage(100, 100, () => { return false; }, IntPtr.Zero);
@@ -316,7 +348,7 @@ namespace Biaoqingbao
                                     {
                                         if (e.Button == MouseButtons.Right)
                                         {
-                                            LastClickPicbox = pb.Name;
+                                            _lastClickedPicbox = pb.Name;
                                         }
                                     };
                                     FlowLayout.Controls.Add(pb);
